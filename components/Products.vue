@@ -9,6 +9,9 @@
           <span class="text-title">Our Products</span>
         </h1>
         <h2 class="subtitle">Explore our Products</h2>
+        <div v-show="!_products.length">
+          <Loading />
+        </div>
         <div class="grid">
           <ProductCard
             v-for="product in paginatedProducts"
@@ -16,10 +19,12 @@
             :product="product"
           />
         </div>
-        <div class="pagination">
-          <button @click="prevPage" :disabled="currentPage === 1">Prev</button>
-          <button @click="nextPage" :disabled="currentPage >= totalPages">Next</button>
-        </div>
+        <ClientOnly>
+          <div class="pagination">
+            <button @click="prevPage" :disabled="currentPage === 1">Prev</button>
+            <button @click="nextPage" :disabled="currentPage >= totalPages">Next</button>
+          </div>
+        </ClientOnly>
       </div>
     </Container>
   </div>
@@ -29,89 +34,21 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import ProductCard from "./ProductCard";
 
-const productsData = [
-  {
-    id: 1,
-    title: "Product 1",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 4.5,
-    reviewCount: 64,
-    imageUrl: "/images/product.png",
-  },
-  {
-    id: 2,
-    title: "Product 2",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 5,
-    reviewCount: 32,
-    imageUrl: "/images/product.png",
-  },
-  {
-    id: 3,
-    title: "Product 3",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 5,
-    reviewCount: 32,
-    imageUrl: "/images/product.png",
-  },
-  {
-    id: 4,
-    title: "Product 4",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 5,
-    reviewCount: 32,
-    imageUrl: "/images/product.png",
-  },
-  {
-    id: 5,
-    title: "Product 5",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 5,
-    reviewCount: 32,
-    imageUrl: "/images/product.png",
-  },
-  {
-    id: 6,
-    title: "Product 6",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 5,
-    reviewCount: 32,
-    imageUrl: "/images/product.png",
-  },
-  {
-    id: 7,
-    title: "Product 7",
-    price: 29.99,
-    originalPrice: 49.99,
-    discount: 20,
-    rating: 5,
-    reviewCount: 32,
-    imageUrl: "/images/product.png",
-  },
-];
+import { useProductsStore } from "@/stores/products";
 
-const products = ref(productsData);
+const { fetchProducts, products } = useProductsStore();
+await fetchProducts();
+
+const _products = ref(products);
 const currentPage = ref(1);
 const productsPerPage = ref(4);
 const paginatedProducts = computed(() => {
   const start = (currentPage.value - 1) * productsPerPage.value;
   const end = start + productsPerPage.value;
-  return products.value.slice(start, end);
+  return _products.value.slice(start, end);
 });
 const totalPages = computed(() =>
-  Math.ceil(products.value.length / productsPerPage.value)
+  Math.ceil(_products.value.length / productsPerPage.value)
 );
 
 const updateProductsPerPage = () => {
