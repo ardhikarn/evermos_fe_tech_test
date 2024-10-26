@@ -1,5 +1,5 @@
 <template>
-  <div
+  <header
     v-if="isVisible"
     class="header-top-campaign"
     :class="{ 'animate-hide': isHiding }"
@@ -7,7 +7,10 @@
   >
     <Container>
       <div class="campaign-content">
-        <p>Open Doors To A World Of Fashion <a href="#">Discover More</a></p>
+        <p>
+          Open Doors To A World Of Fashion
+          <a href="#" aria-label="Discover More about Fashion">Discover More</a>
+        </p>
       </div>
     </Container>
     <Icon
@@ -15,8 +18,9 @@
       name="material-symbols:close-rounded"
       class="remove-campaign"
       @click="startHideAnimation"
+      aria-label="Close Campaign"
     />
-  </div>
+  </header>
 </template>
 
 <script lang="ts" setup>
@@ -37,16 +41,7 @@ function handleAnimationEnd() {
 </script>
 
 <style lang="scss" scoped>
-@keyframes fadeUp {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-}
+@use "@/styles/variables" as *;
 
 .header-top-campaign {
   background-image: url("/images/campaign-bg.png");
@@ -64,33 +59,45 @@ function handleAnimationEnd() {
 
   .campaign-content {
     p {
-      color: #fff;
-      font-size: 14px;
+      color: $text-color-light;
+      font-size: $font-size-small;
       margin: 0;
       a {
-        font-weight: 700;
+        font-weight: $font-weight-bold;
         text-decoration: underline;
+        transition: all 0.5s;
+
         &:hover {
-          color: #d63384;
-          transition: all 0.5s;
+          color: $primary-color;
         }
       }
     }
   }
 
   .remove-campaign {
-    background-color: #f8f8f8;
+    background-color: $text-color-light;
     border: none;
-    color: #000;
     cursor: pointer;
-    font-size: 20px;
+    font-size: $font-size-xl;
     position: absolute;
     right: 20px;
     top: 10px;
+
     &:hover {
-      background-color: #3577f0;
+      background-color: $primary-color;
       transition: all 0.5s;
     }
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
   }
 }
 </style>
