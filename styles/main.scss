@@ -1,0 +1,6 @@
+@use '_variables';
+@use '_reset';
+
+.test-text {
+  color: variables.$primary-color;
+}
