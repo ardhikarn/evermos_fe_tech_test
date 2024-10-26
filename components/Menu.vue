@@ -4,7 +4,9 @@
       <Container>
         <div class="navbar-container">
           <div class="logo">
-            <h1>Logo</h1>
+            <NuxtLink to="/">
+              <h1>Logo</h1>
+            </NuxtLink>
           </div>
           <ul class="nav-links">
             <li v-for="(link, index) in navLinks" :key="index">

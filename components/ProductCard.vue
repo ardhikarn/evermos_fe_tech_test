@@ -1,41 +1,42 @@
 <template>
-  <div
-    class="product-card"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
-    @click="this.$router.push(`/product/${product.id}`)"
-  >
-    <div class="image-container">
-      <img :src="product.imageUrl" :alt="product.title" />
-      <div v-if="product.discount" class="discount-badge">
-        {{ product.discount }}% Off
-      </div>
-      <transition name="fade" mode="out-in">
-        <div :class="{ 'hover-options': true, 'hover-options-visible': isHovered }">
-          <div class="icon-container">
-            <button class="icon">
-              <Icon name="fa6-regular:eye" size="12" class="icon" />
-            </button>
-            <button class="add-to-cart" @click="addToCart">Add to Cart</button>
-            <button class="icon">
-              <Icon name="fa6-regular:heart" size="12" />
-            </button>
-          </div>
+  <NuxtLink :to="`/product/${product.id}`">
+    <div
+      class="product-card"
+      @mouseenter="isHovered = true"
+      @mouseleave="isHovered = false"
+    >
+      <div class="image-container">
+        <img :src="product.imageUrl" :alt="product.title" />
+        <div v-if="product.discount" class="discount-badge">
+          {{ product.discount }}% Off
         </div>
-      </transition>
+        <transition name="fade" mode="out-in">
+          <div :class="{ 'hover-options': true, 'hover-options-visible': isHovered }">
+            <div class="icon-container">
+              <button class="icon">
+                <Icon name="fa6-regular:eye" size="12" class="icon" />
+              </button>
+              <button class="add-to-cart" @click="addToCart">Add to Cart</button>
+              <button class="icon">
+                <Icon name="fa6-regular:heart" size="12" />
+              </button>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <h3 class="product-title">{{ product.title }}</h3>
+      <div class="rating">
+        <i v-for="n in Math.floor(product.rating)" :key="n" class="star">★</i>
+        <span class="review-count">({{ product.reviewCount }})</span>
+      </div>
+      <div class="price">
+        ${{ product.price.toFixed(2) }}
+        <span v-if="product.originalPrice" class="original-price">
+          ${{ product.originalPrice.toFixed(2) }}
+        </span>
+      </div>
     </div>
-    <h3 class="product-title">{{ product.title }}</h3>
-    <div class="rating">
-      <i v-for="n in Math.floor(product.rating)" :key="n" class="star">★</i>
-      <span class="review-count">({{ product.reviewCount }})</span>
-    </div>
-    <div class="price">
-      ${{ product.price.toFixed(2) }}
-      <span v-if="product.originalPrice" class="original-price">
-        ${{ product.originalPrice.toFixed(2) }}
-      </span>
-    </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup>
