@@ -6,7 +6,7 @@
       @mouseleave="isHovered = false"
     >
       <div class="image-container">
-        <img :src="product.imageUrl" :alt="product.title" />
+        <img :src="product.images[0]" :alt="product.title" />
         <div v-if="product.discount" class="discount-badge">
           {{ product.discount }}% Off
         </div>
@@ -27,14 +27,14 @@
       <h3 class="product-title">{{ product.title }}</h3>
       <div class="rating">
         <i v-for="n in Math.floor(product.rating)" :key="n" class="star">★</i>
-        <span class="review-count">({{ product.reviewCount }})</span>
+        <span class="review-count">({{ product.reviews }})</span>
       </div>
-      <div class="price">
+      <!-- <div class="price">
         ${{ product.price.toFixed(2) }}
-        <span v-if="product.originalPrice" class="original-price">
-          ${{ product.originalPrice.toFixed(2) }}
+        <span v-if="product.price.min" class="original-price">
+          ${{ product.price.min.toFixed(2) }}
         </span>
-      </div>
+      </div> -->
     </div>
   </NuxtLink>
 </template>

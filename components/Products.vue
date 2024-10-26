@@ -19,6 +19,7 @@
             :product="product"
           />
         </div>
+
         <ClientOnly>
           <div class="pagination">
             <button @click="prevPage" :disabled="currentPage === 1">Prev</button>

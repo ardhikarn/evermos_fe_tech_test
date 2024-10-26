@@ -1,110 +1,122 @@
 <template>
   <Menu :is-full-width="true" />
   <Container>
-    <div class="product-detail-page">
-      <!-- Image Gallery Section -->
-      <div class="gallery">
-        <div class="main-image">
-          <img :src="selectedImage" :alt="product.name" />
-        </div>
-        <div class="thumbnails">
-          <img
-            v-for="(img, index) in product.images"
-            :key="index"
-            :src="img"
-            :alt="`Thumbnail ${index + 1}`"
-            @click="selectedImage = img"
-          />
-        </div>
-      </div>
-
-      <!-- Product Info Section -->
-      <div class="product-info">
-        <h1>{{ product.name }}</h1>
-        <p class="price">{{ formatPrice(product.price) }}</p>
-
-        <div class="rating">
-          <span>⭐⭐⭐⭐⭐</span>
-          <span class="reviews">({{ product.reviews }} customer reviews)</span>
-        </div>
-
-        <ul class="product-details">
-          <li>✔ In stock</li>
-          <li>✔ Free delivery available</li>
-          <li>✔ Sales 30% OFF Use Code: <strong>MOTIVE30</strong></li>
-        </ul>
-
-        <!-- Color Options -->
-        <div class="color-options">
-          <p>Colors:</p>
-          <div class="color-circles">
-            <span
-              v-for="(color, index) in product.colors"
+    <ClientOnly>
+      <div class="product-detail-page" v-if="product">
+        <!-- Image Gallery Section -->
+        <div class="gallery">
+          <div class="main-image">
+            <img
+              v-if="product && product.images.length"
+              :src="selectedImage"
+              :alt="product.title"
+            />
+          </div>
+          <div class="thumbnails">
+            <img
+              v-for="(img, index) in product.images"
               :key="index"
-              :style="{ backgroundColor: color }"
-              class="color-circle"
-            ></span>
+              :src="img"
+              :alt="`Thumbnail ${index + 1}`"
+              @click="selectedImage = img"
+            />
           </div>
         </div>
 
-        <!-- Size Options -->
-        <div class="size-options">
-          <p>Size:</p>
-          <div class="sizes">
-            <button
-              v-for="(size, index) in product.sizes"
-              :key="index"
-              @click="selectedSize = size"
-              :class="{ selected: selectedSize === size }"
-            >
-              {{ size }}
+        <!-- Product Info Section -->
+        <div class="product-info">
+          <h1>{{ product.title }}</h1>
+          <p class="price">{{ formatPrice(product.price) }}</p>
+
+          <div class="rating">
+            <span>⭐⭐⭐⭐⭐</span>
+            <span class="reviews">({{ product.reviews }} customer reviews)</span>
+          </div>
+
+          <ul class="product-details">
+            <li>✔ In stock</li>
+            <li>✔ Free delivery available</li>
+            <li>✔ Sales 30% OFF Use Code: <strong>MOTIVE30</strong></li>
+          </ul>
+
+          <!-- Color Options -->
+          <div class="color-options">
+            <p>Colors:</p>
+            <div class="color-circles">
+              <span
+                v-for="(color, index) in product.colors"
+                :key="index"
+                :style="{ backgroundColor: color }"
+                class="color-circle"
+              ></span>
+            </div>
+          </div>
+
+          <!-- Size Options -->
+          <div class="size-options">
+            <p>Size:</p>
+            <div class="sizes">
+              <button
+                v-for="(size, index) in product.sizes"
+                :key="index"
+                @click="selectedSize = size"
+                :class="{ selected: selectedSize === size }"
+              >
+                {{ size }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="option-selector">
+            <div class="quantity-selector">
+              <button @click="decreaseQuantity">-</button>
+              <span>{{ quantity }}</span>
+              <button @click="increaseQuantity">+</button>
+            </div>
+            <button class="add-to-cart">Add to Cart</button>
+            <button class="wishlist">
+              <Icon name="lucide:heart" size="16" />
             </button>
           </div>
-        </div>
 
-        <!-- Quantity Selector -->
-        <div class="option-selector">
-          <div class="quantity-selector">
-            <button @click="decreaseQuantity">-</button>
-            <span>{{ quantity }}</span>
-            <button @click="increaseQuantity">+</button>
+          <!-- Description Section -->
+          <div class="description">
+            <h2>Description</h2>
+            <p>{{ product.description }}</p>
           </div>
-          <button class="add-to-cart">Add to Cart</button>
-          <button class="wishlist">
-            <Icon name="lucide:heart" size="16" />
-          </button>
-        </div>
 
-        <!-- Description Section -->
-        <div class="description">
-          <h2>Description</h2>
-          <p>{{ product.description }}</p>
-        </div>
+          <!-- Specifications Section -->
+          <div class="specifications">
+            <h2>Specifications</h2>
+            <p>{{ product.specifications }}</p>
+          </div>
 
-        <!-- Specifications Section -->
-        <div class="specifications">
-          <h2>Specifications</h2>
-          <p>{{ product.specifications }}</p>
-        </div>
-
-        <!-- Benefits Section -->
-        <div class="benefits">
-          <div>🚚 Easy Returns</div>
-          <div>💯 Quality Service</div>
-          <div>🏆 Original Product</div>
+          <!-- Benefits Section -->
+          <div class="benefits">
+            <div>🚚 Easy Returns</div>
+            <div>💯 Quality Service</div>
+            <div>🏆 Original Product</div>
+          </div>
         </div>
       </div>
-    </div>
+    </ClientOnly>
   </Container>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useRoute } from "vue-router";
+import { useProductsStore } from "@/stores/products";
 
+const route = useRoute();
 interface Product {
-  name: string;
+  id: number;
+  title: string;
   price: { min: number; max: number };
   reviews: number;
+  discount: number;
+  rating: number;
   images: string[];
   colors: string[];
   sizes: string[];
@@ -112,27 +124,18 @@ interface Product {
   specifications: string;
 }
 
-const product = ref<Product>({
-  name: "Headphone G-200",
-  price: { min: 155.0, max: 255.0 },
-  reviews: 2,
-  images: [
-    "/images/product.png",
-    "/images/product.png",
-    "/images/product.png",
-    "/images/product.png",
-    "/images/product.png",
-  ],
-  colors: ["#aae6f8", "#5f8af7", "#59c3c0"],
-  sizes: ["XS", "S", "M", "L", "XL"],
-  description:
-    "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  specifications:
-    "We’ve created a full-stack structure for our working workflow processes, were from the funny the century initial all the made, have spare to negatives. But the structure was from the funny the century rather, initial all the made, have spare to negatives.",
-});
+const product = ref<Product | null>(null);
+
+await fetch(
+  `https://my-json-server.typicode.com/ardhikarn-note/db_evermos/products/${route.params.id}`
+)
+  .then((res) => res.json())
+  .then((data) => {
+    product.value = data;
+  });
 
 const quantity = ref(1);
-const selectedImage = ref(product.value.images[0]);
+const selectedImage = computed(() => product.value?.images[0] || "");
 const selectedSize = ref("");
 
 const increaseQuantity = () => {

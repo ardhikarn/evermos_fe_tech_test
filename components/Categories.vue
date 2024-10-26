@@ -8,7 +8,7 @@
         <span class="text-title">Categories</span>
       </h1>
       <h2 class="subtitle">Browse by Category</h2>
-      <div v-show="!_categories.length">
+      <div v-show="!categories.length">
         <Loading />
       </div>
       <div class="categories">

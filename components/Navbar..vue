@@ -2,9 +2,7 @@
   <header class="header">
     <Container>
       <div class="header__content">
-        <nav class="header__nav header__nav--left">
-          <router-link to="/" class="header__link">Home</router-link>
-        </nav>
+        <nav class="header__nav header__nav--left"></nav>
         <nav class="header__nav header__nav--right">
           <router-link to="/help" class="header__link">Help</router-link>
           <router-link to="/register" class="header__link">Join Us</router-link>
