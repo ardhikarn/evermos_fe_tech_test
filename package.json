@@ -12,7 +12,9 @@
   "dependencies": {
     "@nuxt/fonts": "^0.10.2",
     "@nuxt/icon": "^1.5.7",
+    "@pinia/nuxt": "^0.5.5",
     "nuxt": "^3.13.2",
+    "pinia": "^2.2.4",
     "vue": "latest",
     "vue-router": "latest"
   },
@@ -20,5 +22,8 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "sass": "^1.80.4",
     "sass-loader": "^16.0.2"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

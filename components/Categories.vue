@@ -8,11 +8,14 @@
         <span class="text-title">Categories</span>
       </h1>
       <h2 class="subtitle">Browse by Category</h2>
+      <div v-show="!_categories.length">
+        <Loading />
+      </div>
       <div class="categories">
         <div class="categories-container">
           <CategoryCard
-            v-for="category in categories"
-            :key="category.id"
+            v-for="category in _categories"
+            :key="category?.id"
             :category="category"
           />
         </div>
@@ -22,47 +25,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import Container from "@/components/Container.vue";
-import CategoryCard from "./CategoryCard.vue"; // Pastikan komponen ini ada
+interface Category {
+  id: number;
+  name: string;
+  image: string;
+}
 
-const categories = [
-  {
-    id: 1,
-    name: "Phones",
-    image: "/images/category.png",
-  },
-  {
-    id: 2,
-    name: "Watches",
-    image: "/images/category.png",
-  },
-  {
-    id: 3,
-    name: "PC",
-    image: "/images/category.png",
-  },
-  {
-    id: 4,
-    name: "Mobiles",
-    image: "/images/category.png",
-  },
-  {
-    id: 5,
-    name: "Monitors",
-    image: "/images/category.png",
-  },
-  {
-    id: 6,
-    name: "Cameras",
-    image: "/images/category.png",
-  },
-  {
-    id: 7,
-    name: "Gaming",
-    image: "/images/category.png",
-  },
-];
+import Container from "@/components/Container.vue";
+import CategoryCard from "./CategoryCard.vue";
+
+import { useCategoriesStore } from "@/stores/categories";
+
+const { fetchCategories, categories } = useCategoriesStore();
+await fetchCategories();
+
+const _categories = computed<Category[]>(() => categories);
 </script>
 
 <style lang="scss" scoped>

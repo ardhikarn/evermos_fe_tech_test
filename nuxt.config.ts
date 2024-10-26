@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
-  modules: ["@nuxtjs/google-fonts", "@nuxt/icon"],
+  modules: ["@nuxtjs/google-fonts", "@nuxt/icon", "@pinia/nuxt"],
   css: ["~/styles/main.scss"],
   vite: {
     css: {
